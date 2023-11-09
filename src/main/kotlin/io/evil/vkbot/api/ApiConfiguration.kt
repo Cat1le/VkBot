@@ -3,6 +3,8 @@ package io.evil.vkbot.api
 import com.vk.api.sdk.client.VkApiClient
 import com.vk.api.sdk.client.actors.GroupActor
 import com.vk.api.sdk.httpclient.HttpTransportClient
+import org.asynchttpclient.AsyncHttpClient
+import org.asynchttpclient.Dsl
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration

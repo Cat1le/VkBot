@@ -1,25 +1,28 @@
 package io.evil.vkbot.api.utils
 
-import io.evil.vkbot.api.Event
-import io.evil.vkbot.api.Listener
 import java.util.concurrent.ExecutorService
 
-class EventBus(private val executor: ExecutorService) {
-    private val handlers: MutableSet<Listener> = mutableSetOf()
+open class EventBus<E>(private val executor: ExecutorService) {
+    interface Subscriber<E> {
+        fun canHandle(event: E): Boolean
+        fun handle(event: E)
+    }
 
-    fun fire(event: Event) {
+    private val handlers: MutableSet<Subscriber<E>> = mutableSetOf()
+
+    fun fire(event: E) {
         handlers.forEach {
-            if (it.isApplicable(event)) {
-                executor.execute { it.apply(event) }
+            if (it.canHandle(event)) {
+                executor.execute { it.handle(event) }
             }
         }
     }
 
-    fun subscribe(handler: Listener): Boolean {
+    fun subscribe(handler: Subscriber<E>): Boolean {
         return handlers.add(handler)
     }
 
-    fun unsubscribe(handler: Listener): Boolean {
+    fun unsubscribe(handler: Subscriber<E>): Boolean {
         return handlers.remove(handler)
     }
 
