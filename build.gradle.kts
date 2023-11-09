@@ -11,8 +11,11 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    implementation("org.springframework:spring-context:6.0.13")
+    implementation("com.vk.api:sdk:1.0.15")
+}
 
-
-tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "1.8"
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "17"
 }
