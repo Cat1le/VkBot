@@ -1,10 +1,10 @@
 package io.evil.vkbot.api
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.vk.api.sdk.client.VkApiClient
 import com.vk.api.sdk.client.actors.GroupActor
 import com.vk.api.sdk.httpclient.HttpTransportClient
-import org.asynchttpclient.AsyncHttpClient
-import org.asynchttpclient.Dsl
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -27,5 +27,10 @@ open class ApiConfiguration {
             env["vk.group.id"]!!.toLong(),
             env["vk.group.token"]!!
         )
+    }
+
+    @Bean
+    open fun gson(): Gson {
+        return Gson()
     }
 }

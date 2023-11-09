@@ -6,7 +6,11 @@ import java.util.concurrent.Executors
 import javax.annotation.PreDestroy
 
 @Component
-class VkEventBus : EventBus<Event>(Executors.newSingleThreadExecutor()) {
+class VkEventBus(listeners: Set<Subscriber<TEvent>>) : EventBus<TEvent>(Executors.newSingleThreadExecutor()) {
+    init {
+        listeners.forEach { subscribe(it) }
+    }
+
     @PreDestroy
     private fun preDestroy() = destroy()
 }

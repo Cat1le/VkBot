@@ -1,5 +1,6 @@
 package io.evil.vkbot.api.vk
 
+import com.google.gson.Gson
 import com.vk.api.sdk.actions.LongPoll
 import com.vk.api.sdk.client.VkApiClient
 import com.vk.api.sdk.client.actors.GroupActor
@@ -10,7 +11,8 @@ import kotlin.concurrent.thread
 class VkEventsListener(
     private val vkClient: VkApiClient,
     private val vkActor: GroupActor,
-    private val bus: VkEventBus
+    private val bus: VkEventBus,
+    private val gson: Gson
 ) {
     fun listen() {
         thread(isDaemon = true) {
@@ -26,7 +28,14 @@ class VkEventsListener(
                     .waitTime(60)
                     .execute()
                     .run {
-                        updates.forEach { bus.fire(it) }
+                        updates.forEach {
+                            bus.fire(
+                                when (it["type"].asString) {
+                                    "message_new" -> gson.fromJson(it, MessageNewEvent::class.java)
+                                    else -> return@forEach
+                                }
+                            )
+                        }
                         serverResponse.ts = ts
                     }
             }
